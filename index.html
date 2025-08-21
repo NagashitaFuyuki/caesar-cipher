@@ -14,7 +14,7 @@
       background: white;
       border-radius: 12px;
       padding: 30px;
-      width: 480px;
+      width: 600px;
       margin: auto;
       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
@@ -76,16 +76,21 @@
     .copy-btn:hover {
       background: #0b7dda;
     }
-    .details {
-      margin-top: 15px;
-      padding: 15px;
-      background: #fafafa;
-      border-radius: 8px;
-      font-size: 15px;
-      color: #333;
-      font-family: monospace;
-      text-align: left;
-      white-space: pre-line;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th {
+      background: #4CAF50;
+      color: #fff;
+      padding: 8px;
+    }
+    td {
+      padding: 6px;
     }
   </style>
 </head>
@@ -106,25 +111,25 @@
       <div class="result" id="result">👉 Kết quả sẽ hiện ở đây...</div>
       <button class="copy-btn" onclick="copyResult()">📋 Copy</button>
     </div>
-    <div class="details" id="details"></div>
+    <div id="details"></div>
   </div>
 
   <script>
-    let pureResult = ""; // chỉ lưu kết quả mã hóa/giải mã
+    let pureResult = "";
 
     function encrypt() {
       let key = parseInt(document.getElementById("key").value);
       let text = document.getElementById("text").value;
       if (isNaN(key) || text.trim() === "") {
         document.getElementById("result").innerText = "⚠️ Vui lòng nhập key và văn bản!";
-        document.getElementById("details").innerText = "";
+        document.getElementById("details").innerHTML = "";
         pureResult = "";
         return;
       }
-      let {output, steps} = caesarCipher(text, key);
+      let {output, table} = caesarCipher(text, key);
       pureResult = output;
       document.getElementById("result").innerText = "🔒 Mã hóa: " + output;
-      document.getElementById("details").innerText = steps;
+      document.getElementById("details").innerHTML = table;
     }
 
     function decrypt() {
@@ -132,34 +137,49 @@
       let text = document.getElementById("text").value;
       if (isNaN(key) || text.trim() === "") {
         document.getElementById("result").innerText = "⚠️ Vui lòng nhập key và văn bản!";
-        document.getElementById("details").innerText = "";
+        document.getElementById("details").innerHTML = "";
         pureResult = "";
         return;
       }
-      let {output, steps} = caesarCipher(text, -key);
+      let {output, table} = caesarCipher(text, -key);
       pureResult = output;
       document.getElementById("result").innerText = "🔓 Giải mã: " + output;
-      document.getElementById("details").innerText = steps;
+      document.getElementById("details").innerHTML = table;
     }
 
     function caesarCipher(text, key) {
       let result = "";
-      let steps = "👉 Chuyển đổi từng ký tự:\n";
+      let table = `<table>
+        <tr>
+          <th>Ký tự gốc</th>
+          <th>ASCII gốc</th>
+          <th>Ký tự mới</th>
+          <th>ASCII mới</th>
+        </tr>`;
       for (let i = 0; i < text.length; i++) {
         let c = text.charCodeAt(i);
         let original = text.charAt(i);
         let converted = original;
-        if (c >= 65 && c <= 90) { // A-Z
-          converted = String.fromCharCode((c - 65 + key + 26) % 26 + 65);
-        } else if (c >= 97 && c <= 122) { // a-z
-          converted = String.fromCharCode((c - 97 + key + 26) % 26 + 97);
+        let newCode = c;
+
+        if (c >= 65 && c <= 90) {
+          newCode = (c - 65 + key + 26) % 26 + 65;
+          converted = String.fromCharCode(newCode);
+        } else if (c >= 97 && c <= 122) {
+          newCode = (c - 97 + key + 26) % 26 + 97;
+          converted = String.fromCharCode(newCode);
         }
+
         result += converted;
-        if (original !== " ") {
-          steps += `${original} → ${converted}\n`;
-        }
+        table += `<tr>
+          <td>${original === " " ? "(space)" : original}</td>
+          <td>${c}</td>
+          <td>${converted === " " ? "(space)" : converted}</td>
+          <td>${newCode}</td>
+        </tr>`;
       }
-      return {output: result, steps: steps};
+      table += `</table>`;
+      return {output: result, table: table};
     }
 
     function copyResult() {
