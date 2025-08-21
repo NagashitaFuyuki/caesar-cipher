@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Mã hóa Caesar Cipher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: #f4f4f9;
+    }
+    h1 {
+      color: #333;
+    }
+    textarea {
+      width: 80%;
+      height: 100px;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+    input[type="number"] {
+      width: 60px;
+      padding: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 18px;
+      min-height: 50px;
+    }
+    #example {
+      margin-top: 15px;
+      font-style: italic;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Caesar Cipher 🔑</h1>
+  <p>Nhập văn bản và chọn key để mã hóa hoặc giải mã.</p>
+
+  <textarea id="textInput" placeholder="Nhập văn bản..."></textarea><br>
+  <label for="key">Key: </label>
+  <input type="number" id="key" value="4" min="1" max="25"><br>
+
+  <button onclick="encrypt()">Mã hóa</button>
+  <button onclick="decrypt()">Giải mã</button>
+
+  <div id="output"></div>
+  <div id="example"></div>
+
+  <script>
+    function caesarShift(str, amount) {
+      if (amount < 0) return caesarShift(str, amount + 26);
+      let output = "";
+
+      for (let i = 0; i < str.length; i++) {
+        let c = str[i];
+        if (c.match(/[a-z]/i)) {
+          let code = str.charCodeAt(i);
+          if (code >= 65 && code <= 90) {
+            c = String.fromCharCode(((code - 65 + amount) % 26) + 65);
+          } else if (code >= 97 && code <= 122) {
+            c = String.fromCharCode(((code - 97 + amount) % 26) + 97);
+          }
+        }
+        output += c;
+      }
+      return output;
+    }
+
+    function encrypt() {
+      let text = document.getElementById("textInput").value;
+      let key = parseInt(document.getElementById("key").value);
+      let encrypted = caesarShift(text, key);
+      document.getElementById("output").innerText = "Mã hóa: " + encrypted;
+      document.getElementById("example").innerText = "Ví dụ: key = " + key + ", A -> " + caesarShift("A", key);
+    }
+
+    function decrypt() {
+      let text = document.getElementById("textInput").value;
+      let key = parseInt(document.getElementById("key").value);
+      let decrypted = caesarShift(text, -key);
+      document.getElementById("output").innerText = "Giải mã: " + decrypted;
+      document.getElementById("example").innerText = "Ví dụ: key = " + key + ", " + caesarShift("A", key) + " -> A";
+    }
+  </script>
+</body>
+</html>
