@@ -2,189 +2,104 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Caesar Cipher 🔑</title>
+  <title>🔐 Caesar Cipher</title>
   <style>
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
       text-align: center;
+      padding: 50px;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
       padding: 30px;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
-      color: #333;
+      width: 400px;
+      margin: auto;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
     h1 {
-      color: #222;
-      margin-bottom: 10px;
+      color: #333;
     }
-    textarea {
-      width: 80%;
-      height: 100px;
-      margin: 15px 0;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      resize: none;
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
     }
-    input[type="number"] {
-      width: 70px;
+    input {
+      width: 90%;
       padding: 8px;
-      font-size: 16px;
+      margin-top: 5px;
       border-radius: 6px;
       border: 1px solid #ccc;
-      margin: 5px;
     }
     button {
-      padding: 12px 25px;
-      margin: 10px;
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background: #4CAF50;
+      color: white;
       font-size: 16px;
       cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      background: #007bff;
-      color: white;
-      transition: 0.3s;
     }
     button:hover {
-      background: #0056b3;
+      background: #45a049;
     }
-    #output {
+    .result {
       margin-top: 20px;
       padding: 15px;
-      background: white;
-      border: 1px solid #ccc;
+      background: #f0f0f0;
       border-radius: 8px;
       font-size: 18px;
-      min-height: 50px;
-    }
-    #details {
-      margin-top: 25px;
-      overflow-x: auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: center;
-    }
-    th {
-      background: #007bff;
-      color: white;
-    }
-    tr:nth-child(even) {
-      background: #f9f9f9;
-    }
-    pre {
-      text-align: left;
-      background: #272822;
-      color: #f8f8f2;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin-top: 30px;
-    }
-    code {
-      font-family: "Courier New", monospace;
+      font-weight: bold;
+      color: #333;
+      word-wrap: break-word;
     }
   </style>
 </head>
 <body>
-  <h1>🔑 Caesar Cipher - Mã hóa & Giải mã</h1>
-  <p>Nhập văn bản và chọn key để thực hiện.</p>
+  <div class="container">
+    <h1>🔐 Caesar Cipher</h1>
+    
+    <label for="key">Nhập key (số dịch chuyển):</label>
+    <input type="number" id="key" value="3">
+    
+    <label for="text">Nhập văn bản:</label>
+    <input type="text" id="text" value="HELLO WORLD">
+    
+    <button onclick="encrypt()">Mã hóa</button>
+    <button onclick="decrypt()">Giải mã</button>
 
-  <textarea id="textInput" placeholder="Nhập văn bản..."></textarea><br>
-  <label for="key">Key: </label>
-  <input type="number" id="key" value="4" min="1" max="25"><br>
-
-  <button onclick="encrypt()">Mã hóa</button>
-  <button onclick="decrypt()">Giải mã</button>
-
-  <div id="output"></div>
-  <div id="details"></div>
-
-  <h2>Code C++ mẫu</h2>
-  <pre><code>
-#include &lt;iostream&gt;
-#include &lt;string&gt;
-using namespace std;
-
-string caesarCipher(string text, int key) {
-    string result = "";
-    for (char c : text) {
-        if (isalpha(c)) {
-            char base = isupper(c) ? 'A' : 'a';
-            result += char((c - base + key + 26) % 26 + base);
-        } else {
-            result += c;
-        }
-    }
-    return result;
-}
-
-int main() {
-    string s = "HELLO";
-    int key = 4;
-    cout &lt;&lt; "Mã hóa: " &lt;&lt; caesarCipher(s, key) &lt;&lt; endl;
-    cout &lt;&lt; "Giải mã: " &lt;&lt; caesarCipher(s, -key) &lt;&lt; endl;
-}
-  </code></pre>
+    <div class="result" id="result">👉 Kết quả sẽ hiện ở đây...</div>
+  </div>
 
   <script>
-    function caesarShift(str, amount) {
-      if (amount < 0) return caesarShift(str, amount + 26);
-      let output = "";
-      for (let i = 0; i < str.length; i++) {
-        let c = str[i];
-        if (c.match(/[a-z]/i)) {
-          let code = str.charCodeAt(i);
-          if (code >= 65 && code <= 90) {
-            c = String.fromCharCode(((code - 65 + amount) % 26) + 65);
-          } else if (code >= 97 && code <= 122) {
-            c = String.fromCharCode(((code - 97 + amount) % 26) + 97);
-          }
-        }
-        output += c;
-      }
-      return output;
-    }
-
-    function showDetails(original, result, key) {
-      let table = "<table><tr><th>Ký tự gốc</th><th>ASCII gốc</th><th>Ký tự mới</th><th>ASCII mới</th></tr>";
-      for (let i = 0; i < original.length; i++) {
-        let o = original[i];
-        let r = result[i];
-        table += `<tr>
-                    <td>${o}</td>
-                    <td>${o.charCodeAt(0) || "-"}</td>
-                    <td>${r}</td>
-                    <td>${r.charCodeAt(0) || "-"}</td>
-                  </tr>`;
-      }
-      table += "</table>";
-      document.getElementById("details").innerHTML = "<h3>Chi tiết biến đổi ký tự (Key = " + key + ")</h3>" + table;
-    }
-
     function encrypt() {
-      let text = document.getElementById("textInput").value;
       let key = parseInt(document.getElementById("key").value);
-      let encrypted = caesarShift(text, key);
-      document.getElementById("output").innerText = "🔒 Mã hóa: " + encrypted;
-      showDetails(text, encrypted, key);
+      let text = document.getElementById("text").value;
+      document.getElementById("result").innerText = "🔒 Mã hóa: " + caesarCipher(text, key);
     }
 
     function decrypt() {
-      let text = document.getElementById("textInput").value;
       let key = parseInt(document.getElementById("key").value);
-      let decrypted = caesarShift(text, -key);
-      document.getElementById("output").innerText = "🔓 Giải mã: " + decrypted;
-      showDetails(text, decrypted, -key);
+      let text = document.getElementById("text").value;
+      document.getElementById("result").innerText = "🔓 Giải mã: " + caesarCipher(text, -key);
+    }
+
+    function caesarCipher(text, key) {
+      let result = "";
+      for (let i = 0; i < text.length; i++) {
+        let c = text.charCodeAt(i);
+        if (c >= 65 && c <= 90) { // A-Z
+          result += String.fromCharCode((c - 65 + key + 26) % 26 + 65);
+        } else if (c >= 97 && c <= 122) { // a-z
+          result += String.fromCharCode((c - 97 + key + 26) % 26 + 97);
+        } else {
+          result += text.charAt(i);
+        }
+      }
+      return result;
     }
   </script>
 </body>
