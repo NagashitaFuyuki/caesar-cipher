@@ -67,10 +67,10 @@
     <h1>🔐 Caesar Cipher</h1>
     
     <label for="key">Nhập key (số dịch chuyển):</label>
-    <input type="number" id="key" value="3">
+    <input type="number" id="key" placeholder="Nhập số key...">
     
     <label for="text">Nhập văn bản:</label>
-    <input type="text" id="text" value="HELLO WORLD">
+    <input type="text" id="text" placeholder="Nhập văn bản cần mã hóa/giải mã...">
     
     <button onclick="encrypt()">Mã hóa</button>
     <button onclick="decrypt()">Giải mã</button>
@@ -83,6 +83,11 @@
     function encrypt() {
       let key = parseInt(document.getElementById("key").value);
       let text = document.getElementById("text").value;
+      if (isNaN(key) || text.trim() === "") {
+        document.getElementById("result").innerText = "⚠️ Vui lòng nhập key và văn bản!";
+        document.getElementById("details").innerText = "";
+        return;
+      }
       let {output, steps} = caesarCipher(text, key);
       document.getElementById("result").innerText = "🔒 Mã hóa: " + output;
       document.getElementById("details").innerText = steps;
@@ -91,6 +96,11 @@
     function decrypt() {
       let key = parseInt(document.getElementById("key").value);
       let text = document.getElementById("text").value;
+      if (isNaN(key) || text.trim() === "") {
+        document.getElementById("result").innerText = "⚠️ Vui lòng nhập key và văn bản!";
+        document.getElementById("details").innerText = "";
+        return;
+      }
       let {output, steps} = caesarCipher(text, -key);
       document.getElementById("result").innerText = "🔓 Giải mã: " + output;
       document.getElementById("details").innerText = steps;
