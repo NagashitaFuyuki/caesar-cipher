@@ -14,7 +14,7 @@
       background: white;
       border-radius: 12px;
       padding: 30px;
-      width: 450px;
+      width: 480px;
       margin: auto;
       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
@@ -46,16 +46,43 @@
     button:hover {
       background: #45a049;
     }
-    .result, .details {
-      margin-top: 20px;
-      padding: 15px;
+    .result-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       background: #f0f0f0;
       border-radius: 8px;
-      font-size: 16px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+    .result {
+      font-size: 18px;
+      font-weight: bold;
       color: #333;
       word-wrap: break-word;
+      flex: 1;
+      text-align: left;
+    }
+    .copy-btn {
+      margin-left: 10px;
+      background: #2196F3;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .copy-btn:hover {
+      background: #0b7dda;
     }
     .details {
+      margin-top: 15px;
+      padding: 15px;
+      background: #fafafa;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #333;
       font-family: monospace;
       text-align: left;
       white-space: pre-line;
@@ -75,7 +102,10 @@
     <button onclick="encrypt()">Mã hóa</button>
     <button onclick="decrypt()">Giải mã</button>
 
-    <div class="result" id="result">👉 Kết quả sẽ hiện ở đây...</div>
+    <div class="result-box">
+      <div class="result" id="result">👉 Kết quả sẽ hiện ở đây...</div>
+      <button class="copy-btn" onclick="copyResult()">📋 Copy</button>
+    </div>
     <div class="details" id="details"></div>
   </div>
 
@@ -124,6 +154,17 @@
         }
       }
       return {output: result, steps: steps};
+    }
+
+    function copyResult() {
+      let text = document.getElementById("result").innerText;
+      if (text.trim() === "" || text.includes("👉 Kết quả sẽ hiện")) {
+        alert("⚠️ Chưa có kết quả để copy!");
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✅ Đã copy kết quả!");
+      });
     }
   </script>
 </body>
