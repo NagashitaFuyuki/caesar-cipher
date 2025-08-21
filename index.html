@@ -110,15 +110,19 @@
   </div>
 
   <script>
+    let pureResult = ""; // chỉ lưu kết quả mã hóa/giải mã
+
     function encrypt() {
       let key = parseInt(document.getElementById("key").value);
       let text = document.getElementById("text").value;
       if (isNaN(key) || text.trim() === "") {
         document.getElementById("result").innerText = "⚠️ Vui lòng nhập key và văn bản!";
         document.getElementById("details").innerText = "";
+        pureResult = "";
         return;
       }
       let {output, steps} = caesarCipher(text, key);
+      pureResult = output;
       document.getElementById("result").innerText = "🔒 Mã hóa: " + output;
       document.getElementById("details").innerText = steps;
     }
@@ -129,9 +133,11 @@
       if (isNaN(key) || text.trim() === "") {
         document.getElementById("result").innerText = "⚠️ Vui lòng nhập key và văn bản!";
         document.getElementById("details").innerText = "";
+        pureResult = "";
         return;
       }
       let {output, steps} = caesarCipher(text, -key);
+      pureResult = output;
       document.getElementById("result").innerText = "🔓 Giải mã: " + output;
       document.getElementById("details").innerText = steps;
     }
@@ -157,13 +163,12 @@
     }
 
     function copyResult() {
-      let text = document.getElementById("result").innerText;
-      if (text.trim() === "" || text.includes("👉 Kết quả sẽ hiện")) {
+      if (pureResult.trim() === "") {
         alert("⚠️ Chưa có kết quả để copy!");
         return;
       }
-      navigator.clipboard.writeText(text).then(() => {
-        alert("✅ Đã copy kết quả!");
+      navigator.clipboard.writeText(pureResult).then(() => {
+        alert("✅ Đã copy: " + pureResult);
       });
     }
   </script>
