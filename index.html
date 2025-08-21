@@ -14,7 +14,7 @@
       background: white;
       border-radius: 12px;
       padding: 30px;
-      width: 400px;
+      width: 450px;
       margin: auto;
       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
@@ -46,15 +46,19 @@
     button:hover {
       background: #45a049;
     }
-    .result {
+    .result, .details {
       margin-top: 20px;
       padding: 15px;
       background: #f0f0f0;
       border-radius: 8px;
-      font-size: 18px;
-      font-weight: bold;
+      font-size: 16px;
       color: #333;
       word-wrap: break-word;
+    }
+    .details {
+      font-family: monospace;
+      text-align: left;
+      white-space: pre-line;
     }
   </style>
 </head>
@@ -72,34 +76,44 @@
     <button onclick="decrypt()">Giải mã</button>
 
     <div class="result" id="result">👉 Kết quả sẽ hiện ở đây...</div>
+    <div class="details" id="details"></div>
   </div>
 
   <script>
     function encrypt() {
       let key = parseInt(document.getElementById("key").value);
       let text = document.getElementById("text").value;
-      document.getElementById("result").innerText = "🔒 Mã hóa: " + caesarCipher(text, key);
+      let {output, steps} = caesarCipher(text, key);
+      document.getElementById("result").innerText = "🔒 Mã hóa: " + output;
+      document.getElementById("details").innerText = steps;
     }
 
     function decrypt() {
       let key = parseInt(document.getElementById("key").value);
       let text = document.getElementById("text").value;
-      document.getElementById("result").innerText = "🔓 Giải mã: " + caesarCipher(text, -key);
+      let {output, steps} = caesarCipher(text, -key);
+      document.getElementById("result").innerText = "🔓 Giải mã: " + output;
+      document.getElementById("details").innerText = steps;
     }
 
     function caesarCipher(text, key) {
       let result = "";
+      let steps = "👉 Chuyển đổi từng ký tự:\n";
       for (let i = 0; i < text.length; i++) {
         let c = text.charCodeAt(i);
+        let original = text.charAt(i);
+        let converted = original;
         if (c >= 65 && c <= 90) { // A-Z
-          result += String.fromCharCode((c - 65 + key + 26) % 26 + 65);
+          converted = String.fromCharCode((c - 65 + key + 26) % 26 + 65);
         } else if (c >= 97 && c <= 122) { // a-z
-          result += String.fromCharCode((c - 97 + key + 26) % 26 + 97);
-        } else {
-          result += text.charAt(i);
+          converted = String.fromCharCode((c - 97 + key + 26) % 26 + 97);
+        }
+        result += converted;
+        if (original !== " ") {
+          steps += `${original} → ${converted}\n`;
         }
       }
-      return result;
+      return {output: result, steps: steps};
     }
   </script>
 </body>
